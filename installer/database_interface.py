@@ -84,10 +84,27 @@ class DatabaseInterface():
 # |--------------------------------------------------------------------------|
     def get_system_type_on_host(self, system_info):
         try:
-            collection = self._mongo_db["systems"]
-            collection.insert_one(system_info)
+            pass
         except Exception as err_msg:
             ServiceLogger.get().log_exception(err_msg)
             raise err_msg
 
 # |---------------End of get_system_type_on_host---------------------------|
+
+# |--------------------------------------------------------------------------|
+# get_systems
+# |--------------------------------------------------------------------------|
+    def get_systems(self):
+        try:
+            collection = self._mongo_db["systems"]
+            docs = collection.find({})
+
+            if docs:
+                return docs
+            else:
+                return None
+        except Exception as err_msg:
+            ServiceLogger.get().log_exception(err_msg)
+            return None
+
+# |--------------------------End of get_systems-----------------------------|

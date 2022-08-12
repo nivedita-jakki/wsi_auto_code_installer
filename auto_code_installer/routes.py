@@ -19,5 +19,5 @@ from installer import views
 
 urlpatterns = [
     path("system", views.add_system_details_into_db,
-         name="add_system_details_into_db"),
+         name="add_system_details_into_db")
 ]

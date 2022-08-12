@@ -23,3 +23,5 @@ class ErrorCode(Enum):
 # |----------------------------------------------------------------------------|
 
     GENERAL_ERROR = "E-300"
+
+    NO_DATA_AVAILABLE = "NO_DATA_AVAILABLE"
