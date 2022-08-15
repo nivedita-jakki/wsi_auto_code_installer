@@ -132,7 +132,8 @@ def update_repos(request):
 
             InputValidator().is_payload_valid(RouterInfo.UPDATE_REPO.value,
                                               data)
-            AutoInstaller().driver_method_for_installation(data)
+            resp_json["status"] = AutoInstaller().\
+                driver_method_for_installation(data)
 
             resp_str = json.dumps(resp_json)
             return HttpResponse(resp_str, status=200)

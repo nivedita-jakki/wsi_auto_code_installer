@@ -106,7 +106,7 @@ class AutoInstaller():
                             }
                             self.api_call_to_update_service(cluster_system_info_from_db.dns,
                                                             input_data)
-
+                return True
         except Exception as error:
             ServiceLogger.get().log_exception(error)
 
@@ -124,6 +124,8 @@ class AutoInstaller():
                     "error_details": error_details
                 }
             # TODO: Post to UI to show this as error.
+
+            return False
 
 # |----------------End of driver_method_for_installation----------------------|
 
