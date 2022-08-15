@@ -80,16 +80,26 @@ class DatabaseInterface():
 # |--------------End of delete_record_on_system_id-------------------------|
 
 # |--------------------------------------------------------------------------|
-# get_system_type_on_host
+# get_system_info_on_system_id
 # |--------------------------------------------------------------------------|
-    def get_system_type_on_host(self, system_info):
+    def get_system_info_on_system_id(self, system_id):
         try:
-            pass
+            collection = self._mongo_db["systems"]
+
+            filter_query = {
+                "system_id": system_id
+            }
+            doc = collection.find_one(filter_query)
+
+            if doc:
+                return doc
+            else:
+                return None
         except Exception as err_msg:
             ServiceLogger.get().log_exception(err_msg)
             raise err_msg
 
-# |---------------End of get_system_type_on_host---------------------------|
+# |---------------End of get_system_info_on_system_id-----------------------|
 
 # |--------------------------------------------------------------------------|
 # get_systems

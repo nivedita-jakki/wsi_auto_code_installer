@@ -3,6 +3,7 @@ import json
 from installer.streamline_json import StreamLineJson
 from installer.service_logger import ServiceLogger
 from installer.constants import ErrorCode
+from installer.constants import RouterInfo
 
 
 # ==============================================================================
@@ -20,13 +21,29 @@ class InputValidator():
 # |----------------------End of get_script_name-------------------------------|
 
 # |----------------------------------------------------------------------------|
-# is_valid_json
+# is_payload_valid
 # |----------------------------------------------------------------------------|
-    def is_valid_json(self):
-        # TODO
-        return True
+    def is_payload_valid(self, api, payload):
+        try:
+            if api == RouterInfo.UPDATE_REPO.value:
+                return self.is_payload_valid_for_api_update_repos(payload)
+            else:
+                return True
+        except Exception as err_msg:
+            raise err_msg
 
-# |----------------------End of is_valid_json------------------------------|
+# |----------------------End of is_payload_valid----------------------------|
+
+# |----------------------------------------------------------------------------|
+# is_payload_valid_for_api_update_repos
+# |----------------------------------------------------------------------------|
+    def is_payload_valid_for_api_update_repos(self, payload):
+        if "systems" in payload:
+            return True
+        else:
+            raise Exception("key systems missed")
+
+# |--------End of is_payload_valid_for_api_update_repos-----------------------|
 
 # |----------------------------------------------------------------------------|
 # is_request_payload_corrupted

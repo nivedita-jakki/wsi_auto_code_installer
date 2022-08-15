@@ -18,6 +18,6 @@ from django.urls import path
 from installer import views
 
 urlpatterns = [
-    path("system", views.add_system_details_into_db,
-         name="add_system_details_into_db")
+    path("system", views.system_details, name="system_details"),
+    path("update-repos", views.update_repos, name="views.update_repos")
 ]
