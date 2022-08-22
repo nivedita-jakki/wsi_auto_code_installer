@@ -43,6 +43,7 @@ class AutoInstaller():
         '''
         try:
             systems_info = input_json["systems"]
+            ServiceLogger.get().log_debug("systems_info: {}".format(systems_info))
 
             for system in systems_info:
                 # Access system_id and split the values
@@ -50,6 +51,9 @@ class AutoInstaller():
                 system_id_split_data = system_id.split("_")
                 ServiceLogger.get().log_debug("Split system info: {}".
                                               format(system_id_split_data))
+                ServiceLogger.get().log_debug("system_id_split_data[0]: {}".
+                                              format(system_id_split_data[0]))
+
                 if system_id_split_data[0] == "cms":
                     # Spawn update installer.
                     self.spawn_installer(system["repos"], "cms")
@@ -57,12 +61,17 @@ class AutoInstaller():
                 elif system_id_split_data[0] == "cs":
                     # Check whether it is on same system.
                     # Get cluster ip from DB.
+                    ServiceLogger.get().log_debug("Fetching data for Cluster: {}".format(system_id))
                     cluster_system_info_from_db = self.db_obj.\
                         get_system_info_on_system_id(system_id)
+                    ServiceLogger.get().log_debug("Data after fetching: {}".
+                                              format(cluster_system_info_from_db))
 
                     # Check whether host is of current system
                     cluster_host_status =\
-                        self.is_current_system_host(cluster_system_info_from_db.host)
+                        self.is_current_system_host(cluster_system_info_from_db["host"])
+                    ServiceLogger.get().log_debug("cluster_host_status: {}".
+                                              format(cluster_host_status))
 
                     if cluster_host_status:
                         # Spawn update installer.
@@ -72,14 +81,20 @@ class AutoInstaller():
                         input_data = {
                             "systems": system
                         }
-                        self.api_call_to_update_service(cluster_system_info_from_db.dns,
+                        self.api_call_to_update_service(cluster_system_info_from_db["dns"],
                                                         input_data)
                 else:
                     # Check whether scanner host and current host are same.
+                    ServiceLogger.get().log_debug("Fetching data for Scanner: {}".format(system_id))
                     scanner_system_info_from_db = self.db_obj.\
                         get_system_info_on_system_id(system_id)
+                    ServiceLogger.get().log_debug("Data after fetching: {}".
+                                              format(scanner_system_info_from_db))
+
                     scanner_host_status =\
-                        self.is_current_system_host(scanner_system_info_from_db.host)
+                        self.is_current_system_host(scanner_system_info_from_db["host"])
+                    ServiceLogger.get().log_debug("scanner_host_status: {}".
+                                              format(scanner_host_status))
 
                     if scanner_host_status:
                         # Spawn update installer.
@@ -87,26 +102,32 @@ class AutoInstaller():
                     else:
                         # Check whether cluster host and current host are same
                         cluster_id = "cs_" + system_id_split_data[-2]
+                        ServiceLogger.get().log_debug(
+                            "Fetching data for Cluster {} to check cluster ip status".
+                            format(cluster_id))
                         cluster_system_info_from_db = self.db_obj.\
                             get_system_info_on_system_id(cluster_id)
+                        ServiceLogger.get().log_debug("Data after fetching: {}".
+                                              format(cluster_system_info_from_db))
+
                         cluster_host_status =\
-                            self.is_current_system_host(cluster_system_info_from_db.host)
+                            self.is_current_system_host(cluster_system_info_from_db["host"])
 
                         if cluster_host_status:
                             # Post request to scanner from cluster to update repos
                             input_data = {
                                 "systems": system
                             }
-                            self.api_call_to_update_service(scanner_system_info_from_db.dns,
+                            self.api_call_to_update_service(scanner_system_info_from_db["dns"],
                                                             input_data)
                         else:
                             # Post request to cluster to from cms to update repos
                             input_data = {
                                 "systems": system
                             }
-                            self.api_call_to_update_service(cluster_system_info_from_db.dns,
+                            self.api_call_to_update_service(cluster_system_info_from_db["dns"],
                                                             input_data)
-                return True
+            return True
         except Exception as error:
             ServiceLogger.get().log_exception(error)
 
@@ -135,6 +156,9 @@ class AutoInstaller():
     def is_current_system_host(self, host):
         try:
             current_system_host_list = Helper.get_host_name()
+            print("current_system_host_list: ", current_system_host_list)
+            # ServiceLogger.get().log_debug("current_system_host_list: ".\
+            #     format(current_system_host_list))
 
             if host in current_system_host_list:
                 return True

@@ -13,7 +13,7 @@ class StreamLineJson:
     def __init__(self, api_name="", entity_type="general", slide_id=""):
         self.api_name = api_name
         self.entity_type = entity_type
-        self._service_name = "wsi_backend"
+        self._service_name = "auto_installer"
         self.slide_id = slide_id
         self.init_maps()
 

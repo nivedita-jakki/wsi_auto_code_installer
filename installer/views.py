@@ -46,6 +46,7 @@ def system_details(request):
                             system_info["system_id"])
 
                 DatabaseInterface().add_systems(system_info)
+                resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
             return HttpResponse(resp_str, status=200)
@@ -77,6 +78,7 @@ def system_details(request):
             else:
                 for doc in docs:
                     resp_json["systems"].append(doc)
+                resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
             return HttpResponse(resp_str, status=status_cdoe)
@@ -109,10 +111,10 @@ def system_details(request):
 @csrf_exempt
 def update_repos(request):
     ServiceLogger.get().log_debug(
-        "update_repos Request method: {}".format(request.method))
+        "repos Request method: {}".format(request.method))
 
     try:
-        if request.method == "POST":
+        if request.method == "PUT":
             resp_json = {
                 "status": False,
                 "error_code": "",
@@ -134,12 +136,13 @@ def update_repos(request):
                                               data)
             resp_json["status"] = AutoInstaller().\
                 driver_method_for_installation(data)
+            resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
             return HttpResponse(resp_str, status=200)
         else:
             ServiceLogger.get().log_debug(
-                "update_repos Response status: 405")
+                "repos Response status: 405")
             return HttpResponse(status=405)
 
     except Exception as error_msg:

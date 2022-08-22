@@ -29,8 +29,9 @@ class Constants():
     HOME_PATH = str(Path.home())
     CONFIG_PATH = join(HOME_PATH, "wsi_app", "etc", "calib_data", "config")
 
-    CODE_UPADATE_UTILITY_SCRIPT_PATH = join(HOME_PATH, "wsi",
-                                            "wsi_application", "main_script")
+    CODE_UPADATE_UTILITY_SCRIPT_PATH = join(HOME_PATH, "office",
+                                            "wsi_application_software_installation",
+                                            "main_script.py")
 
 # ==============================================================================
 # ErrorCode

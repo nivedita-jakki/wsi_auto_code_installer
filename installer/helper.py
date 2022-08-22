@@ -51,10 +51,11 @@ class Helper():
 # get_host_name
 # |----------------------------------------------------------------------------|
     @staticmethod
-    def get_host_name(self):
+    def get_host_name():
         resp = subprocess.check_output(['hostname', '-I'])
         resp_str = resp.decode('utf-8')
         resp_str_list = resp_str.split()
+        print("get_host_name: ", resp_str_list)
         return resp_str_list
 
 # |----------------------End of get_host_name----------------------------------|
