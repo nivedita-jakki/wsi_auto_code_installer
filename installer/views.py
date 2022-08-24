@@ -49,6 +49,8 @@ def system_details(request):
                 resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
+            ServiceLogger.get().log_debug("resp_json: {}".format(resp_json))
+
             return HttpResponse(resp_str, status=200)
             
         elif request.method == "GET":
@@ -62,7 +64,6 @@ def system_details(request):
             }
 
             docs = DatabaseInterface().get_systems()
-
             if docs is None:
                 status_cdoe = 500
                 error_details = StreamLineJson().get_json(
@@ -81,6 +82,8 @@ def system_details(request):
                 resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
+            ServiceLogger.get().log_debug("resp_json: {}".format(resp_json))
+
             return HttpResponse(resp_str, status=status_cdoe)
         else:
             ServiceLogger.get().log_debug(
@@ -139,6 +142,7 @@ def update_repos(request):
             resp_json["status"] = True
 
             resp_str = json.dumps(resp_json)
+            ServiceLogger.get().log_debug("resp_json: {}".format(resp_json))
             return HttpResponse(resp_str, status=200)
         else:
             ServiceLogger.get().log_debug(

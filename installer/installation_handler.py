@@ -1,5 +1,5 @@
 from os.path import join
-import subprocess
+import subprocess, os
 
 from .http_request_handler import HttpRequestHandler
 
@@ -198,8 +198,20 @@ class AutoInstaller():
             Helper.write_json(repo_json_path, repo_obj)
 
             # Spawn update utility
+            ServiceLogger.get().log_debug("Spawning script: {}".format(
+                ["python3", Constants.
+                CODE_UPADATE_UTILITY_SCRIPT_PATH, system_type]
+            ))
+            # # f = open("/home/adminspin/wsi_app/etc/blah.txt", "w")
             subprocess.Popen(["python3", Constants.
                               CODE_UPADATE_UTILITY_SCRIPT_PATH, system_type])
+            # cmd = "python3 {} {} >> /home/adminspin/wsi_app/etc/blah.txt".format(
+            #     Constants.CODE_UPADATE_UTILITY_SCRIPT_PATH, system_type)
+            # os.system(cmd)
+            # f = open("/home/adminspin/wsi_app/etc/blah.txt", "w")
+            # subprocess.Popen(["python3", Constants.
+            #                   CODE_UPADATE_UTILITY_SCRIPT_PATH, system_type],
+            #                   shell=True, stdout=f)
         except Exception as error:
             ServiceLogger.get().log_exception(error)
             actual_err_msg, error_class = StreamLineJson.\

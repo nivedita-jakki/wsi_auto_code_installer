@@ -68,7 +68,8 @@ class ServiceLogger():
 # |----------------------------------------------------------------------------|
     def initialize(self, service_name):
         self._service_name = service_name
-        home_path = str(Path.home())
+        # home_path = join("/var", "www")
+        home_path = join("/home", "adminspin")
         service_log_path = join(home_path, "service_logs", self._service_name)
 
         if not exists(service_log_path):

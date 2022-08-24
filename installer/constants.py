@@ -26,12 +26,12 @@ class Constants():
     VERIFICATION_KEY_PATH =\
         "/home/adminspin/wsi_app/etc/security/authentication.key"
 
-    HOME_PATH = str(Path.home())
-    CONFIG_PATH = join(HOME_PATH, "wsi_app", "etc", "calib_data", "config")
+    # CONFIG_PATH = join("/var/www/html/wsi_app", "etc", "calib_data", "config")
+    CONFIG_PATH = join("/home", "adminspin", "wsi_app", "etc", "calib_data", "config")
 
-    CODE_UPADATE_UTILITY_SCRIPT_PATH = join(HOME_PATH, "office",
+    CODE_UPADATE_UTILITY_SCRIPT_PATH = join("/home", "adminspin", "office",
                                             "wsi_application_software_installation",
-                                            "main_script.py")
+                                            "auto_code_installer.py")
 
 # ==============================================================================
 # ErrorCode

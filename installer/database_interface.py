@@ -107,7 +107,11 @@ class DatabaseInterface():
     def get_systems(self):
         try:
             collection = self._mongo_db["systems"]
-            docs = collection.find({})
+            select_query = {
+                "_id": 0
+            }
+            print("select_query: ", select_query)
+            docs = collection.find({}, select_query)
 
             if docs:
                 return docs
