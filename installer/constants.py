@@ -64,4 +64,4 @@ class RouterInfo(Enum):
 # Class Variables
 # |----------------------------------------------------------------------------|
 
-    UPDATE_REPO = "update-repos"
+    UPDATE_REPO = "repos"

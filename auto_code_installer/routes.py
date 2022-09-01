@@ -19,5 +19,6 @@ from installer import views
 
 urlpatterns = [
     path("system", views.system_details, name="system_details"),
-    path("repos", views.update_repos, name="update_repos")
+    path("repos", views.update_repos, name="repos"),
+    path("status", views.update_repos_status, name="status")
 ]

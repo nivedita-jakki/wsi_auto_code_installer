@@ -164,4 +164,27 @@ def update_repos(request):
         resp_str = json.dumps(resp_json)
         return HttpResponse(resp_str, status=500)
 
-# |----------------------End of update_repos-----------------------|
+# |--------------------------End of update_repos-----------------------------|
+
+# |----------------------------------------------------------------------------|
+# update_repos_status
+# |----------------------------------------------------------------------------|
+@csrf_exempt
+def update_repos_status(request):
+    ServiceLogger.get().log_debug(
+        "repos Request method: {}".format(request.method))
+
+    try:
+        if request.method == "PUT":
+            pass
+    except Exception as error_msg:
+        ServiceLogger.get().log_exception(error_msg)
+        actual_err_msg, error_class = StreamLineJson.\
+            get_error_info(error_msg)
+        error_details = StreamLineJson().get_json(
+                "error", ErrorCode.GENERAL_ERROR.value,
+                actual_err_msg, ""
+            )
+    return HttpResponse(status=200)
+
+# |----------------------End of update_repos_status-----------------------|

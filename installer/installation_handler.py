@@ -192,10 +192,18 @@ class AutoInstaller():
             # Write repos information to disk and spawn a script
             # to update installer.
             repo_obj = {
-                "repos": repo_list
+                "repos": repo_list,
+                "id": 1
             }
-            repo_json_path = join(Constants.CONFIG_PATH, "repo_list.json")
-            Helper.write_json(repo_json_path, repo_obj)
+            repo_status = DatabaseInterface().is_repo_id_exists(1)
+
+            if repo_status:
+                DatabaseInterface().delete_record_on_repo_id(1)
+
+            DatabaseInterface().add_repo_info(repo_obj)
+
+            # repo_json_path = join(Constants.CONFIG_PATH, "repo_list.json")
+            # Helper.write_json(repo_json_path, repo_obj)
 
             # Spawn update utility
             ServiceLogger.get().log_debug("Spawning script: {}".format(

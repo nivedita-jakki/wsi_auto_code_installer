@@ -122,3 +122,56 @@ class DatabaseInterface():
             return None
 
 # |--------------------------End of get_systems-----------------------------|
+
+# |--------------------------------------------------------------------------|
+# add_repo_info
+# |--------------------------------------------------------------------------|
+    def add_repo_info(self, repo_obj):
+        try:
+            collection = self._mongo_db["repo_info"]
+            collection.insert_one(repo_obj)
+        except Exception as err_msg:
+            ServiceLogger.get().log_exception(err_msg)
+            raise err_msg
+
+# |----------------------End of add_repo_info------------------------------|
+
+# |--------------------------------------------------------------------------|
+# is_repo_id_exists
+# |--------------------------------------------------------------------------|
+    def is_repo_id_exists(self, id):
+        try:
+            collection = self._mongo_db["repo_info"]
+
+            filter_query = {
+                "id": id
+            }
+            doc = collection.find_one(filter_query)
+
+            if doc:
+                return True
+            else:
+                return False
+        except Exception as err_msg:
+            ServiceLogger.get().log_exception(err_msg)
+            raise err_msg
+
+# |----------------------End of is_repo_id_exists--------------------------|
+
+# |--------------------------------------------------------------------------|
+# delete_record_on_repo_id
+# |--------------------------------------------------------------------------|
+    def delete_record_on_repo_id(self, id):
+        try:
+            collection = self._mongo_db["repo_info"]
+
+            delete_query = {
+                "id": id
+            }
+            collection.delete_many(delete_query)
+
+        except Exception as err_msg:
+            ServiceLogger.get().log_exception(err_msg)
+            raise err_msg
+
+# |--------------End of delete_record_on_repo_id-------------------------|

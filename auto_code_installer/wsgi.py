@@ -17,5 +17,6 @@ from django.core.wsgi import get_wsgi_application
 sys.path.append("/home/adminspin/wsi_auto_code_installer/auto_code_installer")
 sys.path.append("/home/adminspin/wsi_auto_code_installer")
 os.environ['DJANGO_SETTINGS_MODULE'] = 'auto_code_installer.settings'
+os.environ['HTTPS'] = "on"
 print("Came!!!!!!!")
 application = get_wsgi_application()
