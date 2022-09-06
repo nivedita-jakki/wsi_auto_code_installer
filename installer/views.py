@@ -176,7 +176,39 @@ def update_repos_status(request):
 
     try:
         if request.method == "PUT":
-            pass
+            resp_json = {
+                "status": False,
+                "error_code": "",
+                "error_info": "",
+                "error_details": {}
+            }
+
+            is_valid, data, error_obj = InputValidator().\
+                is_request_payload_corrupted(request)
+
+            if not is_valid:
+                resp_json["error_code"] = ErrorCode.GENERAL_ERROR.value
+                resp_json["error_details"] = error_obj
+                resp_json["error_info"] = "Invalid payload"
+                resp_str = json.dumps(resp_json)
+                return HttpResponse(resp_str, status=400)
+
+            # InputValidator().is_payload_valid(RouterInfo.UPDATE_REPO.value,
+            #                                   data)            
+
+            resp_json["status"] = AutoInstaller().\
+                update_installation_status(data)
+            resp_json["status"] = True
+
+            ServiceLogger.get().log_debug("resp_json: {}".format(resp_json))
+
+            resp_json["status"] = True
+            resp_str = json.dumps(resp_json)
+            ServiceLogger.get().log_debug(
+                "update_repos_status payload: {}".format(data))
+
+            return HttpResponse(resp_str, status=200)
+
     except Exception as error_msg:
         ServiceLogger.get().log_exception(error_msg)
         actual_err_msg, error_class = StreamLineJson.\
@@ -185,6 +217,11 @@ def update_repos_status(request):
                 "error", ErrorCode.GENERAL_ERROR.value,
                 actual_err_msg, ""
             )
-    return HttpResponse(status=200)
+        resp_json["error_code"] = ErrorCode.GENERAL_ERROR.value
+        resp_json["error_details"] = error_details
+        resp_json["error_info"] = error_msg.args[0]
+
+        resp_str = json.dumps(resp_json)
+        return HttpResponse(resp_str, status=500)
 
 # |----------------------End of update_repos_status-----------------------|

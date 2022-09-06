@@ -65,3 +65,5 @@ class RouterInfo(Enum):
 # |----------------------------------------------------------------------------|
 
     UPDATE_REPO = "repos"
+
+    STATUS_UPDATE = "status"

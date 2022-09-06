@@ -47,6 +47,11 @@ class AutoInstaller():
 
             for system in systems_info:
                 # Access system_id and split the values
+                if "called_from" in system:
+                    called_from = system["called_from"]
+                else:
+                    called_from = ""
+
                 system_id = system["system_id"]
                 system_id_split_data = system_id.split("_")
                 ServiceLogger.get().log_debug("Split system info: {}".
@@ -56,7 +61,7 @@ class AutoInstaller():
 
                 if system_id_split_data[0] == "cms":
                     # Spawn update installer.
-                    self.spawn_installer(system["repos"], "cms")
+                    self.spawn_installer(system["repos"], "cms", called_from, Constants.CMS_DNS)
 
                 elif system_id_split_data[0] == "cs":
                     # Check whether it is on same system.
@@ -75,9 +80,10 @@ class AutoInstaller():
 
                     if cluster_host_status:
                         # Spawn update installer.
-                        self.spawn_installer(system["repos"], "cluster")
+                        self.spawn_installer(system["repos"], "cluster", called_from, cluster_system_info_from_db["dns"])
                     else:
                         # Post request to cluster from cms to update repos
+                        system["called_from"] = Constants.CMS_DNS
                         input_data = {
                             "systems": system
                         }
@@ -98,7 +104,7 @@ class AutoInstaller():
 
                     if scanner_host_status:
                         # Spawn update installer.
-                        self.spawn_installer(system["repos"], "scanner")
+                        self.spawn_installer(system["repos"], "scanner", called_from, scanner_system_info_from_db["dns"])
                     else:
                         # Check whether cluster host and current host are same
                         cluster_id = "cs_" + system_id_split_data[-2]
@@ -115,6 +121,7 @@ class AutoInstaller():
 
                         if cluster_host_status:
                             # Post request to scanner from cluster to update repos
+                            system["called_from"] = cluster_system_info_from_db["dns"]
                             input_data = {
                                 "systems": system
                             }
@@ -122,6 +129,7 @@ class AutoInstaller():
                                                             input_data)
                         else:
                             # Post request to cluster to from cms to update repos
+                            system["called_from"] = Constants.CMS_DNS
                             input_data = {
                                 "systems": system
                             }
@@ -187,13 +195,15 @@ class AutoInstaller():
 # |----------------------------------------------------------------------------|
 # spawn_installer
 # |----------------------------------------------------------------------------|
-    def spawn_installer(self, repo_list, system_type):
+    def spawn_installer(self, repo_list, system_type, called_from, current_dns):
         try:
             # Write repos information to disk and spawn a script
             # to update installer.
             repo_obj = {
+                "id": 1,
                 "repos": repo_list,
-                "id": 1
+                "called_from": called_from,
+                "current_dns": current_dns
             }
             repo_status = DatabaseInterface().is_repo_id_exists(1)
 
@@ -201,9 +211,6 @@ class AutoInstaller():
                 DatabaseInterface().delete_record_on_repo_id(1)
 
             DatabaseInterface().add_repo_info(repo_obj)
-
-            # repo_json_path = join(Constants.CONFIG_PATH, "repo_list.json")
-            # Helper.write_json(repo_json_path, repo_obj)
 
             # Spawn update utility
             ServiceLogger.get().log_debug("Spawning script: {}".format(
@@ -245,9 +252,9 @@ class AutoInstaller():
     def api_call_to_update_service(self, host, input_data):
         try:
             http_obj = HttpRequestHandler()
+            port = ""
             http_obj.post_request(RouterInfo.UPDATE_REPO.value, host,
-                                  Constants.UPDATE_SERVICE_PORT,
-                                  input_data)
+                                  port, input_data)
         except Exception as error:
             ServiceLogger.get().log_exception(error)
             actual_err_msg, error_class = StreamLineJson.\
@@ -266,3 +273,36 @@ class AutoInstaller():
             # TODO: Post to UI to show this as error.
 
 # |--------------End of api_call_to_update_service----------------------------|
+
+# |----------------------------------------------------------------------------|
+# update_installation_status
+# |----------------------------------------------------------------------------|
+    def update_installation_status(self, input_data):
+        '''
+            Check whether status has to be pushed to different system or not.
+        '''
+        try:
+            http_obj = HttpRequestHandler()
+            if input_data["called_from"] != "":
+                port = ""
+                http_obj.put_request(RouterInfo.STATUS_UPDATE.value,
+                                      input_data["called_from"],
+                                      port, input_data)
+        except Exception as error:
+            ServiceLogger.get().log_exception(error)
+            actual_err_msg, error_class = StreamLineJson.\
+                get_error_info(error)
+            error_details = StreamLineJson().get_json(
+                    "error", ErrorCode.GENERAL_ERROR.value,
+                    actual_err_msg
+                )
+
+            # Post scanner error to UI.
+            error_json = {
+                    "error_info": error.args[0],
+                    "error_code": ErrorCode.GENERAL_ERROR.value,
+                    "error_details": error_details
+                }
+            # TODO: Post to UI to show this as error.
+
+# |--------------End of update_installation_status----------------------------|

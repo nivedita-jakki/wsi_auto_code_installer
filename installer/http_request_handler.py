@@ -55,10 +55,14 @@ class HttpRequestHandler():
     def get_request(self, request_name, dest_ip, dest_port, pay_load=None,
                     timeout=None):
 
-        dest_url = ("https://{}:{}/{}".
-                    format(dest_ip,
-                           dest_port,
-                           request_name))
+        if dest_ip == "":
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip, request_name))
+        else:
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip,
+                            dest_port,
+                            request_name))
 
         request_time_out_status = False
 
@@ -83,10 +87,14 @@ class HttpRequestHandler():
     def post_request(self, request_name, dest_ip, dest_port, pay_load=None,
                      timeout=None):
 
-        dest_url = ("https://{}:{}/{}".
-                    format(dest_ip,
-                           dest_port,
-                           request_name))
+        if dest_ip == "":
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip, request_name))
+        else:
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip,
+                            dest_port,
+                            request_name))
 
         request_time_out_status = False
 
@@ -111,10 +119,14 @@ class HttpRequestHandler():
     def put_request(self, request_name, dest_ip, dest_port, pay_load=None,
                     timeout=None):
 
-        dest_url = ("https://{}:{}/{}".
-                    format(dest_ip,
-                           dest_port,
-                           request_name))
+        if dest_ip == "":
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip, request_name))
+        else:
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip,
+                            dest_port,
+                            request_name))
 
         request_time_out_status = False
 
@@ -139,10 +151,14 @@ class HttpRequestHandler():
     def patch_request(self, request_name, dest_ip, dest_port, pay_load=None,
                       timeout=None):
 
-        dest_url = ("https://{}:{}/{}".
-                    format(dest_ip,
-                           dest_port,
-                           request_name))
+        if dest_ip == "":
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip, request_name))
+        else:
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip,
+                            dest_port,
+                            request_name))
 
         request_time_out_status = False
 
@@ -167,10 +183,14 @@ class HttpRequestHandler():
     def delete_request(self, request_name, dest_ip, dest_port, pay_load=None,
                        timeout=None):
 
-        dest_url = ("https://{}:{}/{}".
-                    format(dest_ip,
-                           dest_port,
-                           request_name))
+        if dest_ip == "":
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip, request_name))
+        else:
+            dest_url = ("https://{}:{}/{}".
+                        format(dest_ip,
+                            dest_port,
+                            request_name))
 
         request_time_out_status = False
 
