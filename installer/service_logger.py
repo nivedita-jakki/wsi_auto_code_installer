@@ -25,6 +25,8 @@ class ServiceLogger():
 # Constructor
 # |----------------------------------------------------------------------------|
     def __init__(self):
+        self.home_path = join("/home", "adminspin")
+
         if ServiceLogger._singleton is not None:
             raise Exception("ServiceLogger is a singleton class")
         else:
@@ -48,8 +50,7 @@ class ServiceLogger():
 # get_new_logger_path
 # |----------------------------------------------------------------------------|
     def get_new_logger_path(self):
-        home_path = str(Path.home())
-        service_log_path = join(home_path, "service_logs", self._service_name)
+        service_log_path = join(self.home_path, "service_logs", self._service_name)
 
         if not exists(service_log_path):
             os.makedirs(service_log_path, exist_ok=True)
@@ -68,9 +69,7 @@ class ServiceLogger():
 # |----------------------------------------------------------------------------|
     def initialize(self, service_name):
         self._service_name = service_name
-        # home_path = join("/var", "www")
-        home_path = join("/home", "adminspin")
-        service_log_path = join(home_path, "service_logs", self._service_name)
+        service_log_path = join(self.home_path, "service_logs", self._service_name)
 
         if not exists(service_log_path):
             os.makedirs(service_log_path, exist_ok=True)
@@ -196,8 +195,7 @@ class ServiceLogger():
 # is_date_changed
 # |----------------------------------------------------------------------------|
     def is_date_changed(self):
-        home_path = str(Path.home())
-        service_log_path = join(home_path, "service_logs", self._service_name)
+        service_log_path = join(self.home_path, "service_logs", self._service_name)
 
         folder_path = service_log_path
         list_of_files = glob.glob(folder_path + "/*.log")

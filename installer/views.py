@@ -16,6 +16,8 @@ from installer.database_interface import DatabaseInterface
 # |----------------------------------------------------------------------------|
 @csrf_exempt
 def system_details(request):
+    print("request.method: ", request.method)
+    print("request.method: ", type(request.method))
     ServiceLogger.get().log_debug(
         "system_details Request method: {}".format(request.method))
 
@@ -91,6 +93,7 @@ def system_details(request):
             return HttpResponse(status=405)
 
     except Exception as error_msg:
+        print("error_msg: ", error_msg)
         ServiceLogger.get().log_exception(error_msg)
         actual_err_msg, error_class = StreamLineJson.\
             get_error_info(error_msg)
